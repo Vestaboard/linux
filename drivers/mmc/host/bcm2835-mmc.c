@@ -1000,6 +1000,18 @@ static irqreturn_t bcm2835_mmc_irq(int irq, void *dev_id)
 	}
 
 	do {
+		if (intmask & SDHCI_INT_CRC)
+			pr_err("%s: (brcmfmac) CRC error detected on CMD transfer\n",
+				mmc_hostname(host->mmc));
+
+		if (intmask & SDHCI_INT_DATA_CRC)
+			pr_err("%s: (brcmfmac) CRC error detected on DATA transfer\n",
+				mmc_hostname(host->mmc));
+
+		if (intmask & SDHCI_INT_DATA_TIMEOUT)
+			pr_err("%s: (brcmfmac) timeout detected on DATA transfer\n",
+				mmc_hostname(host->mmc));
+
 		/* Clear selected interrupts. */
 		mask = intmask & (SDHCI_INT_CMD_MASK | SDHCI_INT_DATA_MASK |
 				  SDHCI_INT_BUS_POWER);
