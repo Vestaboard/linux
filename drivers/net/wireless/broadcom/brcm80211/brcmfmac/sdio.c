@@ -3991,6 +3991,7 @@ brcmf_sdio_probe_attach(struct brcmf_sdio *bus)
 		drivestrength = sdiodev->settings->bus.sdio.drive_strength;
 	else
 		drivestrength = DEFAULT_SDIO_DRIVE_STRENGTH;
+
 	brcmf_sdio_drivestrengthinit(sdiodev, bus->ci, drivestrength);
 
 	/* Set card control so an SDIO card reset does a WLAN backplane reset */

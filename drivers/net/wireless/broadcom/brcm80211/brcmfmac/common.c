@@ -33,6 +33,11 @@ MODULE_LICENSE("Dual BSD/GPL");
 
 #define BRCMF_DEFAULT_TXGLOM_SIZE	32  /* max tx frames in glom chain */
 
+
+static int brcmf_sdio_ds;
+module_param_named(sdio_ds, brcmf_sdio_ds, int, 0);
+MODULE_PARM_DESC(sdio_ds, "Configure SDIO bus drive strength");
+
 static int brcmf_sdiod_txglomsz = BRCMF_DEFAULT_TXGLOM_SIZE;
 module_param_named(txglomsz, brcmf_sdiod_txglomsz, int, 0);
 MODULE_PARM_DESC(txglomsz, "Maximum tx packet chain size [SDIO]");
@@ -417,8 +422,11 @@ struct brcmf_mp_device *brcmf_get_module_param(struct device *dev,
 	settings->ignore_probe_fail = !!brcmf_ignore_probe_fail;
 #endif
 
-	if (bus_type == BRCMF_BUSTYPE_SDIO)
+	if (bus_type == BRCMF_BUSTYPE_SDIO) {
 		settings->bus.sdio.txglomsz = brcmf_sdiod_txglomsz;
+		if (brcmf_sdio_ds > 0 && brcmf_sdio_ds <= 16)
+			settings->bus.sdio.drive_strength = brcmf_sdio_ds;
+	}
 
 	/* See if there is any device specific platform data configured */
 	found = false;
